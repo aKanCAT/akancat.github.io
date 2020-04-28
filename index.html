@@ -1,31 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 
-<head>
+  <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+
     <title>Vue 練習</title>
 
-    <!-- <script src="lib/bootstrap.js"></script> -->
-    <script src="lib/jquery-3.4.1.js"></script>
-    <script src="lib/vue-2.6.11.js"></script>
+    <!-- <script src="/js/bootstrap.js"></script> -->
+    <script src="./js/jquery-3.4.1.js"></script>
+    <script src="./js/vue-2.6.11.js"></script>
+    <script src="./js/moment.js"></script>
+    <script src="./js/moment-timezone.js"></script>
+    <!-- <script src="/js/axios.js"></script> -->
+
+    <!-- 自訂組件 -->
+    <!-- <script src="/js/VueDynamicTable.min.js"></script> -->
 
     <!-- <script src="js/pixi-5.2.0.min.js"></script>
     <script src="js/pixi-spine.js"></script> -->
     <!-- <link href="css/bootstrap.css" rel="stylesheet"> -->
-    <link href="css/index.css" rel="stylesheet">
-</head>
+    <link href="/css/index.css" rel="stylesheet">
 
-<body>
+    <style>
+      .table {
+        padding: 10px;
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+    </style>
+
+  </head>
+
+
+  <body>
     <!-- <h1>巧～カ～力～</h1> -->
 
     <div id="app">
-        <p>{{ foo }}</p>
+      <p>{{ foo }}</p>
 
-        <!-- 这里的 `foo` 不会更新！ -->
-        <button v-on:click="foo = 'baz'">Change it</button>
+      <p><a v-bind:href="url">{{url}}</a></p>
+
+      <!-- 这里的 `foo` 不会更新！ -->
+      <button v-on:click="func1">Func 1</button>
+
+      <!-- 这里的 `foo` 不会更新！ -->
+      <button v-on:click="func2">Func 2</button>
+      <span>{{ fetchMsg }}</span>
+
+      <div>
+        <p></p>
+        <!-- 外表格 table1 -->
+        <table class="tb1" cellpadding="1px;">
+          <!-- <caption>Awesome caption</caption> -->
+          <!-- <thead></thead> -->
+          <tbody>
+            <tr v-for="(item) in list">
+              <td>{{item.title}}</td>
+              <td>
+                <!-- 內插新的表格 table2 -->
+                <table class="tb2">
+                  <tr v-for="(imgs) in item.items">
+                    <td>{{imgs.name}}</td>
+                    <td>
+                      <!-- 內插新的表格 table3 -->
+                      <table class="tb3">
+                        <td v-for="(img) in imgs.list">
+                          <img v-bind:src="img" />
+                        </td>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- <td v-bind:rowspan="item.items.length">{{ item.title }}</td> -->
+            <!-- <tr>
+              <td>{{item.title}}</td>
+            </tr> -->
+
+            <!-- <tr v-for="(value) in item.items">
+              <td> {{value.name}} </td>
+            </tr> -->
+
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <script src="vue-app/index.js"></script>
-</body>
+    <script type="text/javascript" src="vue-app/index.js"></script>
+    </div>
+  </body>
 
 </html>
