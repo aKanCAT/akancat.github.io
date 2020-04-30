@@ -10,86 +10,61 @@ var obj = {
     url: URL,
     fetchMsg: '',
     list: [{
-            title: '1000 哩程',
-            items: [{
-                    name: '電線桿',
-                    list: [
-                        "imgs/FtrTelephonepole_Remake_0_0.png",
-                        "imgs/FtrTelephonepole_Remake_1_0.png",
-                    ]
-                },
-                {
-                    name: '流動廁所',
-                    list: [
-                        "imgs/FtrWCPortable_Remake_0_0.png",
-                        "imgs/FtrWCPortable_Remake_1_0.png",
-                        "imgs/FtrWCPortable_Remake_2_0.png",
-                        "imgs/FtrWCPortable_Remake_3_0.png",
-                        "imgs/FtrWCPortable_Remake_4_0.png"
-                    ]
-                },
-                {
-                    name: '告示牌',
-                    list: [
-                        "imgs/FtrSignConstruction_Remake_0_0.png",
-                        "imgs/FtrSignConstruction_Remake_1_0.png",
-                        "imgs/FtrSignConstruction_Remake_2_0.png",
-                        "imgs/FtrSignConstruction_Remake_3_0.png",
-                        "imgs/FtrSignConstruction_Remake_4_0.png"
-                    ]
-                }
-            ]
-        },
-        {
-            title: '2000 哩程',
-            items: [{
-                    name: '販賣機',
-                    list: [
-                        "imgs/FtrFoodmachine_Remake_0_0.png",
-                        "imgs/FtrFoodmachine_Remake_1_0.png",
-                        "imgs/FtrFoodmachine_Remake_2_0.png",
-                        "imgs/FtrFoodmachine_Remake_3_0.png",
-                    ]
-                },
-                {
-                    name: '望遠鏡',
-                    list: [
-                        "imgs/FtrTelescopeSightseeing_Remake_0_0.png",
-                        "imgs/FtrTelescopeSightseeing_Remake_1_0.png",
-                        "imgs/FtrTelescopeSightseeing_Remake_2_0.png",
-                        "imgs/FtrTelescopeSightseeing_Remake_3_0.png",
-                        "imgs/FtrTelescopeSightseeing_Remake_4_0.png"
-                    ]
-                }
-            ]
-        },
-        {
-            title: '2400 哩程',
-            items: [{
-                    name: '廣場時鐘',
-                    list: [
-                        "imgs/FtrParkclock_Remake_0_0.png",
-                        "imgs/FtrParkclock_Remake_1_0.png",
-                        "imgs/FtrParkclock_Remake_2_0.png",
-                        "imgs/FtrParkclock_Remake_3_0.png",
-                    ]
-                },
-                {
-                    name: '電話亭',
-                    list: [
-                        "imgs/FtrTelephonebox_Remake_0_0.png",
-                        "imgs/FtrTelephonebox_Remake_1_0.png",
-                        "imgs/FtrTelephonebox_Remake_2_0.png",
-                        "imgs/FtrTelephonebox_Remake_3_0.png",
-                        "imgs/FtrTelephonebox_Remake_4_0.png",
-                        "imgs/FtrTelephonebox_Remake_5_0.png",
-                        "imgs/FtrTelephonebox_Remake_6_0.png",
-                        "imgs/FtrTelephonebox_Remake_7_0.png"
-                    ]
-                }
-            ]
-        }
-    ]
+        caption: '電線桿',
+        name: 'Telephonepole',
+        cost: 1000,
+        count: 2
+    }, {
+        caption: '流動廁所',
+        name: 'WCPortable',
+        cost: 1000,
+        count: 5
+    }, {
+        caption: '施工告示牌',
+        name: 'SignConstruction',
+        cost: 1000,
+        count: 5
+    }, {
+        caption: '電線桿',
+        name: 'Telephonepole',
+        cost: 1000,
+        count: 2
+    }, {
+        caption: '沙灘瞭望台',
+        name: 'Monitoringchair',
+        cost: 1000,
+        count: 5
+    }, {
+        caption: '自動販賣機',
+        name: 'Drinkmachine',
+        cost: 2000,
+        count: 6
+    }, {
+        caption: '甜點自動販賣機',
+        name: 'Foodmachine',
+        cost: 2000,
+        count: 4
+    }, {
+        caption: '彈簧遊樂器材',
+        name: 'Springrider',
+        cost: 2000,
+        count: 7
+    }, {
+        caption: '觀光望遠鏡',
+        name: 'TelescopeSightseeing',
+        cost: 2000,
+        count: 5
+    }, {
+        caption: '公園時鐘',
+        name: 'Parkclock',
+        cost: 2400,
+        count: 2
+    }, {
+        caption: '電話亭',
+        name: 'Telephonebox',
+        cost: 2400,
+        count: 8
+    }]
 }
 
 function jsonCallback(json) {
@@ -98,6 +73,7 @@ function jsonCallback(json) {
         alert(index + " " + value);
     });
 }
+
 
 let vm = new Vue({
     el: '#app',
@@ -204,6 +180,12 @@ let vm = new Vue({
             // let json = JSON.parse(res);
             // vm.list = json.data;
             // console.log(json.data);
+        },
+
+        getName: function(name, index) {
+            let result = 'imgs/Ftr' + name + '_Remake_' + (index - 1) + '_0.png';
+            console.log(result);
+            return result;
         }
     }
 });

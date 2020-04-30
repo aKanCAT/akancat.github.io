@@ -1,17 +1,49 @@
-table {
-    padding: 10px;
-    border: 1px solid black;
-    border-collapse: collapse;
+.mytable {
+    /* padding: 10px;
+    
+    border-collapse: collapse; */
+
+    /* border: 1px solid black; */
+
+    vertical-align: middle;
+
+    display: table;
+    /* border-collapse: separate;
+    border-spacing: 2px;
+    border-color: gray; */
+    /* padding: 10px; */
+    /* border: 1px solid black; */
 }
 
-.table1 td {
-    padding: 10px;
-    border: 1px solid black;
-    border-collapse: collapse;
+.my_th1 {
+    text-align: left !important;
 }
 
-.table2 td {
-    padding: 10px;
-    border: 1px solid black;
-    border-collapse: collapse;
+.my_th2 {
+    text-align: center !important;
+}
+
+.my_td1 {
+    vertical-align: middle;
+}
+
+.my_td2 {
+    min-width: 64px;
+    max-width: 128px;
+    min-height: 64px;
+    max-height: 128px;
+    width: auto;
+    height: auto;
+    padding: 1px;
+    vertical-align: middle;
+}
+
+td.img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.my_span1 {
+    text-align: left;
 }
