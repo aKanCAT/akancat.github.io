@@ -6,9 +6,11 @@ const capi_url = 'https://tw.rter.info/capi.php';
 const URL = 'http://tw.rter.info/json.php?t=currency&q=check&iso=JPY';
 
 var obj = {
+    app: null,
     foo: 'bar',
     url: URL,
     fetchMsg: '',
+    providerF: null,
     list: [{
         caption: '電線桿',
         name: 'Telephonepole',
@@ -75,12 +77,45 @@ function jsonCallback(json) {
 }
 
 
+// Your web app's Firebase configuration
+var firebaseConfig = {
+    apiKey: "AIzaSyAwzKGftHCZ2chwI_n0BA7Cn2Kbd3xd504",
+    authDomain: "acnh-connect-test.firebaseapp.com",
+    databaseURL: "https://acnh-connect-test.firebaseio.com",
+    projectId: "acnh-connect-test",
+    storageBucket: "acnh-connect-test.appspot.com",
+    messagingSenderId: "655249333290",
+    appId: "1:655249333290:web:5d869851f66757f9c17753",
+    measurementId: "G-K4KZR20V55"
+};
+
+
 let vm = new Vue({
     el: '#app',
     data: obj,
 
+    beforeCreate() {
+        console.log('beforeCreate');
+    },
     created() {
         console.log('created');
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // console.log(firebase);
+        // console.log(firebase.auth);
+
+        // firebase.analytics();
+
+        // this.app = new PIXI.Application({
+        //     width: this.width,
+        //     height: this.height,
+        //     backgroundColor: 0x1099bb
+        // });
+
+        // el.addendChild(this.app);
+
+        //let pixi_app = new PIXI.Application(414, 736, { backgroundColor: 0x1099bb });
 
         // const hostname = "http://www.google.com.tw";
         // fetch(`${hostname}`, {
@@ -117,7 +152,13 @@ let vm = new Vue({
         //         }
         //     );
     },
+    beforeMount() {
+        console.log('beforeMount');
+    },
     mounted() {
+        console.log('mouted');
+        //console.log(this.$el);
+
         // axios
         //     .get()
         //     .then(function (response) {
@@ -129,16 +170,44 @@ let vm = new Vue({
     },
     computed: {
 
+
     },
     methods: {
+        fb_click1: function() {
+            console.log('以 Google 登入 (Start)');
+
+            let provider = new firebase.auth.GoogleAuthProvider();
+
+            firebase.auth().signInWithPopup(provider)
+                .then(function(result) {
+                    console.log('以 Google 登入 (end)');
+                    console.log(result.credential.accessToken);
+                    console.log(result.user);
+                    // var token = result.credential.accessToken;
+                    // var user = result.user;
+                })
+        },
+        fb_click2: function() {
+            console.log('以 Facebook 登入 (Start)');
+
+            let provider = new firebase.auth.FacebookAuthProvider();
+
+            firebase.auth().signInWithPopup(provider)
+                .then(function(result) {
+                    console.log('以 Facebook 登入 (end)');
+                    console.log(result.credential.accessToken);
+                    console.log(result.user);
+                    // var token = result.credential.accessToken;
+                    // var user = result.user;
+                })
+        },
+
         getURL: function() {
             return URL + '&_=' + moment.utc().valueOf();
         },
         func1: function() {
             //this.url = URL + '_=' + moment.utc().valueOf();
-
             let vm = this;
-
             $.ajax({
                 type: "get",
                 url: 'json.php',
@@ -184,7 +253,7 @@ let vm = new Vue({
 
         getName: function(name, index) {
             let result = 'imgs/Ftr' + name + '_Remake_' + (index - 1) + '_0.png';
-            console.log(result);
+            //console.log(result);
             return result;
         }
     }

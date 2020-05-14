@@ -47,3 +47,27 @@ td.img {
 .my_span1 {
     text-align: left;
 }
+
+.my_td3 {
+    width: auto
+}
+
+.mytable2 {
+    border-collapse: collapse;
+}
+
+
+.mybtn {
+    border-style: none;
+    width: 200px;
+    height: 50px;
+}
+
+
+.google {
+    background-color: #ea4335;
+}
+
+.facebook {
+    background-color: #3b5998;
+}

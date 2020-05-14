@@ -4,74 +4,52 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta charset="utf-8">
 
     <title>Vue 練習</title>
 
     <script src="./js/jquery-3.4.1.js"></script>
     <script src="./js/bootstrap.js"></script>
 
-    <script src="./js/axios.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-auth.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-analytics.js"></script>
 
+    <!-- axios 2.6.11 -->
+    <script src="./js/axios.js"></script>
+    <!-- vue 2.6.11 -->
     <script src="./js/vue-2.6.11.js"></script>
+    <!-- pixi 5.2.4 -->
+    <script src="./js/pixi.js"></script>
+
 
     <script src="./js/moment.js"></script>
     <script src="./js/moment-timezone.js"></script>
-
-    <!-- 自訂組件 -->
-    <!-- <script src="/js/VueDynamicTable.min.js"></script> -->
-
-    <!-- <script src="js/pixi-5.2.0.min.js"></script>
-    <script src="js/pixi-spine.js"></script> -->
 
     <link href="./css/bootstrap.css" rel="stylesheet">
     <link href="./css/index.css" rel="stylesheet">
   </head>
 
-
   <body>
-
     <div id="app">
-
-      <!-- <div> -->
-      <div class="table-responsive">
-        <!-- 外表格 table1 -->
-        <table class="table mytable">
-          <!--  -->
-          <caption>哩程兌換家俱列表</caption>
-          <!--  -->
-          <thead class="thead-light">
-            <tr>
-              <th class="my_th1">名稱</th>
-              <th class="my_th2" v-for="n in 8">{{n}}</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr v-for="(item) in list">
-              <td class="my_td1">
-                <span class="my_span1"> {{item.caption}}<br>{{item.cost}} </span>
-              </td>
-
-              <td class="my_td2" v-for="n in item.count">
-                <img id="myimg" v-bind:src="getName(item.name, n)" :placeholder="n"  />
-              </td>
-
-            </tr>
-
-            <!-- <td v-bind:rowspan="item.items.length">{{ item.title }}</td> -->
-            <!-- <tr>
-              <td>{{item.title}}</td>
-            </tr> -->
-            <!-- <tr v-for="(value) in item.items">
-              <td> {{value.name}} </td>
-            </tr> -->
-
-          </tbody>
-        </table>
+      <br>
+      <div>
+        <span>登入平台測試</span>
       </div>
+      <br>
+      <p>
+        <button v-on:click="fb_click1" id="googleSingUp" class="mybtn google">
+          以 Google 登入
+        </button>
+      </p>
+      <p>
+        <button v-on:click="fb_click2" id="facebookSingUp" class="mybtn facebook">
+          以 Facebook 登入
+        </button>
+      </p>
     </div>
     <script type="text/javascript" src="vue-app/index.js"></script>
   </body>
-
 </html>
