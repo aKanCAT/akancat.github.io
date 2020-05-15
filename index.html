@@ -24,7 +24,6 @@
     <!-- pixi 5.2.4 -->
     <script src="./js/pixi.js"></script>
 
-
     <script src="./js/moment.js"></script>
     <script src="./js/moment-timezone.js"></script>
 
@@ -34,22 +33,46 @@
 
   <body>
     <div id="app">
-      <br>
       <div>
-        <span>登入平台測試</span>
+        <p><span>登入平台測試</span></p>
+
+        <p>
+          <label class="vert_middle">輸入帳號：</label>
+          <input v-model="email" placeholder="email address">
+          {{email}}
+        </p>
+        <p>
+          <label class="vert_middle">輸入密碼：</label>
+          <input v-model="password" type="password" placeholder="">
+          {{password}}
+        </p>
+        <p>
+          <button v-on:click="emailSignup" class="mybtn email">註冊</button>
+        </p>
+        <p>
+          <button v-on:click="emailLogin" class="mybtn email">登入</button>
+        </p>
+
+        <p><button v-on:click="googleSingUp" class="mybtn google">以 Google 登入</button> </p>
+        <p><button v-on:click="facebookSingUp" id="signin_fb_btn" class="mybtn facebook fb-login">以 Facebook 登入</button> </p>
+
+        <p><button v-on:click="signOut" class="mybtn">登出</button> </p>
       </div>
-      <br>
-      <p>
-        <button v-on:click="fb_click1" id="googleSingUp" class="mybtn google">
-          以 Google 登入
-        </button>
-      </p>
-      <p>
-        <button v-on:click="fb_click2" id="facebookSingUp" class="mybtn facebook">
-          以 Facebook 登入
-        </button>
-      </p>
+
+      <div>
+        <p><span>登入者資訊</span></p>
+        <ul>
+          <li><span class="myspan_bold">token</span> : {{token}}</li>
+          <li><span class="myspan_bold">user </span> : {{user}}</li>
+
+          <li><span class="myspan_bold">使用者名稱</span> - <span class="myspan_text"></span></li>
+          <li><span class="myspan_bold">使用者郵件</span> - <span class="myspan_text"></span></li>
+          <li><span class="myspan_bold">使用者生日</span> - <span class="myspan_text"></span></li>
+        </ul>
+      </div>
+
     </div>
     <script type="text/javascript" src="vue-app/index.js"></script>
   </body>
+
 </html>

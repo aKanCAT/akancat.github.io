@@ -9,7 +9,15 @@ var obj = {
     app: null,
     foo: 'bar',
     url: URL,
+
+    token: '',
+    user: '',
+
+    email: '',
+    password: '',
+
     fetchMsg: '',
+    providerG: null,
     providerF: null,
     list: [{
         caption: '電線桿',
@@ -102,6 +110,11 @@ let vm = new Vue({
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
 
+        this.providerG = new firebase.auth.GoogleAuthProvider();
+
+        this.providerF = new firebase.auth.FacebookAuthProvider();
+        this.providerF.addScope('user_birthday');
+
         // console.log(firebase);
         // console.log(firebase.auth);
 
@@ -173,35 +186,128 @@ let vm = new Vue({
 
     },
     methods: {
-        fb_click1: function() {
+        signOut: function() {
+            firebase.auth().signOut()
+                .then(function() {
+                    console.log('登出成功');
+                    // Sign-out successful.
+                    this.token = '';
+                    this.user = '';
+                })
+                .catch(function(error) {
+                    // An error happened.
+                    console.log('登出失敗');
+                    console.log(error);
+                });
+        },
+        emailSignup: function() {
+            console.log('emailSignup');
+            let email = this.email;
+            let password = this.password;
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .catch(function(error) {
+                    console.log('以 email 註冊失敗');
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(errorCode);
+                    console.log(errorMessage);
+                });;
+        },
+        emailLogin: function() {
+            console.log('emailLogin');
+            let email = this.email;
+            let password = this.password;
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .catch(function(error) {
+                    console.log('以 email 登入失敗');
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(errorCode);
+                    console.log(errorMessage);
+                });;
+        },
+        googleSingUp: function() {
             console.log('以 Google 登入 (Start)');
 
-            let provider = new firebase.auth.GoogleAuthProvider();
-
-            firebase.auth().signInWithPopup(provider)
+            firebase.auth().signInWithPopup(this.providerG)
                 .then(function(result) {
                     console.log('以 Google 登入 (end)');
-                    console.log(result.credential.accessToken);
-                    console.log(result.user);
-                    // var token = result.credential.accessToken;
-                    // var user = result.user;
+                    this.token = result.credential.accessToken;
+                    this.user = result.user;
+                    console.log(user);
                 })
         },
-        fb_click2: function() {
-            console.log('以 Facebook 登入 (Start)');
+        facebookSingUp1: function() {
+            console.log('以 Facebook 登入 (Redirect)');
 
-            let provider = new firebase.auth.FacebookAuthProvider();
+            //let firebaseAuth = firebase.auth();
+            //firebaseAuth.languageCode = 'zh_TW';
 
-            firebase.auth().signInWithPopup(provider)
+            firebase.auth().signInWithRedirect(this.providerF);
+            firebase.auth().getRedirectResult()
                 .then(function(result) {
-                    console.log('以 Facebook 登入 (end)');
-                    console.log(result.credential.accessToken);
-                    console.log(result.user);
-                    // var token = result.credential.accessToken;
-                    // var user = result.user;
-                })
-        },
+                    console.log('以 Facebook 登入 (Redirect end)');
 
+                    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+                    this.token = result.credential.accessToken;
+                    this.user = result.user;
+
+                }).catch(function(error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    console.log(errorCode);
+
+                    var errorMessage = error.message;
+                    console.log(errorMessage);
+
+                    // The email of the user's account used.
+                    var email = error.email;
+                    console.log(email);
+
+                    // The firebase.auth.AuthCredential type that was used.
+                    var credential = error.credential;
+                    console.log(credential);
+
+                    // ...
+                    console.log('以 Facebook 登入 (失敗)');
+                });
+
+        },
+        facebookSingUp: function() {
+            console.log('以 Facebook 登入 (Popup)');
+
+            //let firebaseAuth = firebase.auth();
+            // firebaseAuth.languageCode = 'zh_TW';
+
+            firebase.auth().signInWithPopup(this.providerF)
+                .then(function(result) {
+                    console.log('以 Facebook 登入成功');
+
+                    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+                    this.token = result.credential.accessToken;
+                    this.user = result.user;
+
+                }).catch(function(error) {
+                    console.log('以 Facebook 登入失敗');
+
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    console.log(errorCode);
+
+                    var errorMessage = error.message;
+                    console.log(errorMessage);
+
+                    // The email of the user's account used.
+                    var email = error.email;
+                    console.log(email);
+
+                    // The firebase.auth.AuthCredential type that was used.
+                    var credential = error.credential;
+                    console.log(credential);
+                });
+        },
         getURL: function() {
             return URL + '&_=' + moment.utc().valueOf();
         },
