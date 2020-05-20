@@ -12,10 +12,13 @@
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-analytics.js"></script>
+
     <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
-    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.3/firebase-firestore.js"></script>
+
 
     <!-- axios 2.6.11 -->
     <script src="./js/axios.js"></script>
@@ -36,38 +39,39 @@
       <div>
         <p><span>登入平台測試</span></p>
 
-        <p>
-          <label class="vert_middle">輸入帳號：</label>
-          <input v-model="email" placeholder="email address">
-          {{email}}
-        </p>
-        <p>
-          <label class="vert_middle">輸入密碼：</label>
-          <input v-model="password" type="password" placeholder="">
-          {{password}}
-        </p>
-        <p>
-          <button v-on:click="emailSignup" class="mybtn email">註冊</button>
-        </p>
-        <p>
-          <button v-on:click="emailLogin" class="mybtn email">登入</button>
-        </p>
-
-        <p><button v-on:click="googleSingUp" class="mybtn google">以 Google 登入</button> </p>
-        <p><button v-on:click="facebookSingUp" id="signin_fb_btn" class="mybtn facebook fb-login">以 Facebook 登入</button> </p>
-
+        <div style="display:none">
+          <p>
+            <label class="vert_middle">輸入帳號：</label>
+            <input v-model="user_email"> {{user_email}}
+          </p>
+          <p>
+            <label class="vert_middle">輸入密碼：</label>
+            <input v-model="user_password" type="password"> {{user_password}}
+          </p>
+          <p>
+            <button v-on:click="createUser" class="mybtn email">註冊</button>
+          </p>
+          <p>
+            <button v-on:click="emailSignIn" class="mybtn email">登入</button>
+          </p>
+        </div>
+        <p><button v-on:click="googleSignIn" class="mybtn google">以 Google 登入</button> </p>
+        <p><button v-on:click="facebookSignIn" id="signin_fb_btn" class="mybtn facebook fb-login">以 Facebook 登入</button> </p>
         <p><button v-on:click="signOut" class="mybtn">登出</button> </p>
       </div>
 
       <div>
-        <p><span>登入者資訊</span></p>
-        <ul>
-          <li><span class="myspan_bold">token</span> : {{token}}</li>
-          <li><span class="myspan_bold">user </span> : {{user}}</li>
 
-          <li><span class="myspan_bold">使用者名稱</span> - <span class="myspan_text"></span></li>
-          <li><span class="myspan_bold">使用者郵件</span> - <span class="myspan_text"></span></li>
-          <li><span class="myspan_bold">使用者生日</span> - <span class="myspan_text"></span></li>
+        <span>登入者資訊</span>
+        <br>
+        <img v-bind:src="user_img" style="max-width: 50px; max-height: 50px;">
+        <br>
+        <ul>
+          <li><span class="myspan_bold">使用者名稱</span> - {{userName}} </li>
+          <li><span class="myspan_bold">使用者 uid</span> - {{userUID}} </li>
+          <!-- <li><span class="myspan_bold">使用者 token</span> : {{user_token}} </li> -->
+          <li><span class="myspan_bold">使用者郵件</span> - {{userEmail}} </li>
+          <!-- <li><span class="myspan_bold">使用者生日</span> - <span class="myspan_text"></span></li> -->
         </ul>
       </div>
 
