@@ -16,7 +16,7 @@ var obj = {
     url: URL,
 
     isLoaded: false,
-    isEmailAuthEnabled: true,
+    isEmailAuthEnabled: false,
 
     user: null,
 
