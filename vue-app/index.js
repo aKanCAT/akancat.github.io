@@ -1,86 +1,38 @@
 const cors = 'https://cors-anywhere.herokuapp.com/'; // use cors-anywhere to fetch api data
 const capi_url = 'https://tw.rter.info/capi.php';
-
-
-
 const URL = 'http://tw.rter.info/json.php?t=currency&q=check&iso=JPY';
+
+
+
+const FireBaseSignType = Object.freeze({
+    "email": 0,
+    "google": 1,
+    "facebook": 2,
+});
 
 var obj = {
     app: null,
     foo: 'bar',
     url: URL,
 
+    isLoaded: false,
+    isEmailAuthEnabled: true,
+
     user: null,
 
     user_img: '',
     user_name: '',
-    user_email: 'akan318@livemail.tw',
-    user_password: '123456',
+    inputEmail: 'akan318@livemail.tw',
+    inputPassword: '123456',
+
     user_token: null,
     user_birthday: null,
 
     providerData: [],
 
-
     fetchMsg: '',
     providerG: null,
     providerF: null,
-    list: [{
-        caption: '電線桿',
-        name: 'Telephonepole',
-        cost: 1000,
-        count: 2
-    }, {
-        caption: '流動廁所',
-        name: 'WCPortable',
-        cost: 1000,
-        count: 5
-    }, {
-        caption: '施工告示牌',
-        name: 'SignConstruction',
-        cost: 1000,
-        count: 5
-    }, {
-        caption: '電線桿',
-        name: 'Telephonepole',
-        cost: 1000,
-        count: 2
-    }, {
-        caption: '沙灘瞭望台',
-        name: 'Monitoringchair',
-        cost: 1000,
-        count: 5
-    }, {
-        caption: '自動販賣機',
-        name: 'Drinkmachine',
-        cost: 2000,
-        count: 6
-    }, {
-        caption: '甜點自動販賣機',
-        name: 'Foodmachine',
-        cost: 2000,
-        count: 4
-    }, {
-        caption: '彈簧遊樂器材',
-        name: 'Springrider',
-        cost: 2000,
-        count: 7
-    }, {
-        caption: '觀光望遠鏡',
-        name: 'TelescopeSightseeing',
-        cost: 2000,
-        count: 5
-    }, {
-        caption: '公園時鐘',
-        name: 'Parkclock',
-        cost: 2400,
-        count: 2
-    }, {
-        caption: '電話亭',
-        name: 'Telephonebox',
-        cost: 2400,
-        count: 8
-    }]
 }
 
 function jsonCallback(json) {
@@ -89,20 +41,6 @@ function jsonCallback(json) {
         alert(index + " " + value);
     });
 }
-
-
-// Your web app's Firebase configuration
-var firebaseConfig = {
-    apiKey: "AIzaSyAwzKGftHCZ2chwI_n0BA7Cn2Kbd3xd504",
-    authDomain: "acnh-connect-test.firebaseapp.com",
-    databaseURL: "https://acnh-connect-test.firebaseio.com",
-    projectId: "acnh-connect-test",
-    storageBucket: "acnh-connect-test.appspot.com",
-    messagingSenderId: "655249333290",
-    appId: "1:655249333290:web:5d869851f66757f9c17753",
-    measurementId: "G-K4KZR20V55"
-};
-
 
 let vm = new Vue({
     el: '#app',
@@ -114,6 +52,18 @@ let vm = new Vue({
     // 建立完成後 //
     created() {
         console.log('[Vue] created');
+
+        // Your web app's Firebase configuration
+        let firebaseConfig = {
+            apiKey: "AIzaSyAwzKGftHCZ2chwI_n0BA7Cn2Kbd3xd504",
+            authDomain: "acnh-connect-test.firebaseapp.com",
+            databaseURL: "https://acnh-connect-test.firebaseio.com",
+            projectId: "acnh-connect-test",
+            storageBucket: "acnh-connect-test.appspot.com",
+            messagingSenderId: "655249333290",
+            appId: "1:655249333290:web:5d869851f66757f9c17753",
+            measurementId: "G-K4KZR20V55"
+        };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -190,6 +140,10 @@ let vm = new Vue({
 
     },
     computed: {
+        isSignIn() {
+            return (this.user !== null);
+        },
+
         currentUser: function() {
             console.log('currentUser');
             return firebase.auth().currentUser;
@@ -209,34 +163,32 @@ let vm = new Vue({
         }
     },
     methods: {
-        onAuthStateChanged(value) {
+        // 由 firebase 回呼(非同步) //
+        onAuthStateChanged(user) {
             console.log('[firebase] onAuthStateChanged');
 
-            let old_user = this.user;
-            this.user = value;
+            if (!this.isLoaded) this.isLoaded = true;
 
-            if (value) {
-                console.log('使用者已登入');
-                console.log(value);
+            let old_user = this.user;
+            this.user = user;
+
+            if (user) {
+                console.log(user);
+
                 // var displayName = user.displayName;
                 // var email = user.email;
                 // var emailVerified = user.emailVerified;
                 // var photoURL = user.photoURL;
 
-                this.user_token = value.refreshToken;
-                this.user_img = value.photoURL;
+                this.user_token = user.refreshToken;
+                this.user_img = user.photoURL;
 
-                this.providerData = value.providerData;
-                this.providerData.forEach(profile => {
+                // this.providerData = user.providerData;
+                // this.providerData.forEach(profile => {
 
-                });
-
-                // var isAnonymous = user.isAnonymous;
-                // var uid = user.uid;
-                // var providerData = user.providerData;
-                // ...
+                // });
             } else {
-                console.log('使用者已登出');
+                console.log('使用者不存在 or 已登出');
             }
         },
         signOut() {
@@ -257,8 +209,10 @@ let vm = new Vue({
             console.log('[firebase] createUserWithEmailAndPassword');
 
             let vm = this;
+            let email = this.inputEmail;
+            let pw = this.inputPassword;
 
-            firebase.auth().createUserWithEmailAndPassword(vm.user_email, vm.user_password)
+            firebase.auth().createUserWithEmailAndPassword(email, pw)
                 .catch(error => {
                     console.log('以 email 註冊失敗');
                     console.log(error);
@@ -274,19 +228,22 @@ let vm = new Vue({
 
         },
         emailSignIn() {
-
-            let firebaseAuth = firebase.auth();
-
-            console.log('[firebase] signInWithEmailAndPassword');
+            console.log('[firebase] 以 email 登入');
 
             let vm = this;
-            // firebase.auth().signInWithEmailAndPassword(vm.user_email, vm.user_password)
-            //     .catch(error => {
-            //         vm.onLoginFail(0, error);
-            //     });;
+            let email = this.inputEmail;
+            let pw = this.inputPassword;
+            let firebaseAuth = firebase.auth();
 
-            var user = firebase.auth().currentUser;
-            console.log(user);
+            firebaseAuth.signInWithEmailAndPassword(email, pw)
+                .catch(error => {
+                    vm.onLoginFail(0, error);
+                });
+
+            var user = firebaseAuth.currentUser;
+            if (user) {
+                //console.log(user);
+            }
 
             // firebaseAuth.currentUser.linkWithPopup(provider).then(function(result) {
             //     // Accounts successfully linked.
@@ -299,62 +256,51 @@ let vm = new Vue({
             //   });
 
         },
-        googleSignIn(isPopup = true) {
+        signIn(signType = 0, popup = true) {
 
-            let firebaseAuth = firebase.auth();
+            //console.log('signIn(' + signType + ', ' + popup + ')');
 
-            firebaseAuth.languageCode = 'zh_TW';
+            let provider = null;
 
-            console.log('[firebase] 以 Google 登入 ' + isPopup ? '(popup)' : '(Redirect)');
-            console.log(firebaseAuth.languageCode);
-
-            let vm = this;
-
-            if (isPopup) {
-                firebaseAuth.signInWithPopup(vm.providerG)
-                    .then(result => {
-                        vm.onLogin(1, result);
-                    })
-                    .catch(error => {
-                        vm.onLoginFail(1, error);
-                    });
-            } else {
-
+            switch (signType) {
+                case FireBaseSignType.email:
+                    console.log('[firebase] 以 email 登入');
+                    break;
+                case FireBaseSignType.google:
+                    provider = this.providerG;
+                    console.log('[firebase] 以 Google 登入');
+                    break;
+                case FireBaseSignType.facebook:
+                    provider = this.providerF;
+                    console.log('[firebase] 以 Facebook 登入');
+                    break;
             }
-        },
-        facebookSignIn(isPopup = true) {
 
-            let firebaseAuth = firebase.auth();
-            firebaseAuth.languageCode = 'zh_TW';
+            if (provider) {
+                let vm = this;
 
-            console.log('[firebase] 以 Facebook 登入 ' + isPopup ? '(popup)' : '(Redirect)');
-            console.log(firebaseAuth.languageCode);
+                function signInEx() {
+                    let firebaseAuth = firebase.auth();
+                    firebaseAuth.languageCode = 'zh_TW';
+                    if (popup) {
+                        return firebaseAuth.signInWithPopup(provider);
+                    }
+                    firebaseAuth.signInWithRedirect(provider);
+                    return firebaseAuth.getRedirectResult();
+                };
 
-            let vm = this;
-
-            if (isPopup) {
-                firebaseAuth.signInWithPopup(vm.providerF)
-                    .then(result => {
-                        vm.onLogin(2, result);
-                    })
-                    .catch(error => {
-                        vm.onLoginFail(2, error);
-                    });
-            } else {
-                firebaseAuth.signInWithRedirect(vm.providerF);
-                firebaseAuth.getRedirectResult(vm.providerF)
-                    .then(result => {
-                        vm.onLogin(2, result);
-                    })
-                    .catch(error => {
-                        vm.onLoginFail(2, error);
-                    });
+                signInEx().then(result => {
+                    vm.onLogin(signType, result);
+                }).catch(error => {
+                    vm.onLoginFail(signType, error);
+                });
             }
         },
         onLogin(type, result) {
+
             // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-            this.user_name = result.user;
-            this.user_token = result.credential.accessToken;
+            //this.user_name = result.user;
+            //this.user_token = result.credential.accessToken;
 
             switch (type) {
                 case 0:
@@ -367,9 +313,11 @@ let vm = new Vue({
                     console.log('以 Facebook 登入成功');
                     break;
             }
+
             console.log(result);
+            //console.log(result.credential.accessToken);
         },
-        onLoginFail: function(type, error) {
+        onLoginFail(type, error) {
             //
             this.login_error = error;
 
